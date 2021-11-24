@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_modulo_1/views/add_product_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -9,6 +10,13 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<String> words = [];
+
+  _navigator(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) {
+      return const AddProduct();
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,13 +41,13 @@ class _MainScreenState extends State<MainScreen> {
           const Flexible(
               flex: 1,
               child: Center(
-                child: Text("Tet"),
+                child: Text("Total: R\$00,00"),
               ))
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
+          _navigator(context);
         },
         child: const Icon(Icons.add),
       ),
