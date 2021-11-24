@@ -13,7 +13,6 @@ class ValueContainer extends StatelessWidget {
         Container(
           height: 50,
           width: 50,
-          color: Colors.blue,
           child: const Icon(
             Icons.arrow_downward,
           ),
@@ -21,7 +20,6 @@ class ValueContainer extends StatelessWidget {
         Container(
           height: 50,
           width: 125,
-          color: Colors.red,
           child: Column(
             children: [
               TextField(
@@ -38,7 +36,6 @@ class ValueContainer extends StatelessWidget {
         Container(
           height: 50,
           width: 50,
-          color: Colors.blue,
           child: const Icon(
             Icons.arrow_upward,
           ),
