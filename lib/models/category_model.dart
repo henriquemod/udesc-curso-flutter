@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 
 class Category {
+  int id;
   AssetImage thumb;
   String name;
 
-  Category(this.thumb, this.name);
+  Category(this.id, this.thumb, this.name);
 }
