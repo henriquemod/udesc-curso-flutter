@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_modulo_1/controllers/add_product_controller.dart';
+import 'package:projeto_modulo_1/controllers/categories_controller.dart';
+import 'package:projeto_modulo_1/views/widgets/category_container.dart';
 import 'package:projeto_modulo_1/views/widgets/text_input.dart';
 import 'package:projeto_modulo_1/views/widgets/value_container.dart';
 
@@ -12,6 +14,7 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   AddProductController controller = AddProductController();
+  CategoryController catController = CategoryController();
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +29,13 @@ class _AddProductState extends State<AddProduct> {
             ValueContainer(
               controller: controller.productValueController,
             ),
+            CategoryContainer(
+              catController: catController,
+            ),
             ElevatedButton(
               onPressed: () {
                 // ignore: avoid_print
-                print(controller.productNameController.text);
+                print(catController.selectedCat);
                 controller.productNameController.clear();
               },
               child: const Text('Salvar'),
