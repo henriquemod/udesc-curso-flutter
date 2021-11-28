@@ -30,6 +30,13 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  clearList() {
+    setState(() {
+      list.clearList();
+      totalValue = 00.00;
+    });
+  }
+
   subValue(double value) {
     setState(() {
       totalValue -= value;
@@ -43,16 +50,17 @@ class _MainScreenState extends State<MainScreen> {
           builder: (BuildContext context) => const AddProduct(),
           fullscreenDialog: true,
         ));
-    addToLit(
-        result[0],
-        double.parse(
-          result[1],
-        ));
-
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("Adicionados ${result[1]} de ${result[2]}"),
-      duration: const Duration(seconds: 2),
-    ));
+    if (result != null) {
+      addToLit(
+          result[0],
+          double.parse(
+            result[1],
+          ));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Adicionados ${result[1]} de ${result[2]}"),
+        duration: const Duration(seconds: 2),
+      ));
+    }
   }
 
   @override
@@ -61,6 +69,19 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: const Text("Lista de compras"),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.clear,
+            ),
+            tooltip: 'Clear List',
+            onPressed: () {
+              clearList();
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text('Lista limpa')));
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -80,7 +101,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     title: Text(cat.name),
                     subtitle: Text(
-                        'Valor: ' + list.getProducts()[index].value.toString()),
+                        'Valor: ${list.getProducts()[index].value.toStringAsFixed(2)}'),
                     trailing: IconButton(
                       icon: const Icon(Icons.arrow_downward),
                       tooltip: 'Remove item',
@@ -100,7 +121,7 @@ class _MainScreenState extends State<MainScreen> {
           Flexible(
               flex: 1,
               child: Center(
-                child: Text("Total: R\$" + totalValue.toString()),
+                child: Text("Total: R\$${totalValue.toStringAsFixed(2)}"),
               ))
         ],
       ),
