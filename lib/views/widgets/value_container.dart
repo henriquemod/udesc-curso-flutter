@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ValueContainer extends StatelessWidget {
   final TextEditingController controller;
@@ -10,34 +11,56 @@ class ValueContainer extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
+        SizedBox(
           height: 50,
           width: 50,
-          child: const Icon(
-            Icons.arrow_downward,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_downward),
+            tooltip: 'Decrease value',
+            onPressed: () {
+              double value = double.parse(controller.text);
+              if (value - 10.00 > 0.0) {
+                value -= 10.00;
+              } else {
+                value = 00.00;
+              }
+              controller.text = value.toStringAsFixed(2);
+            },
           ),
         ),
-        Container(
+        SizedBox(
           height: 50,
-          width: 125,
+          width: 150,
           child: Column(
             children: [
               TextField(
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'^(\d+)?\.?\d{0,2}'))
+                ],
                 controller: controller,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 20, // This is not so important
                 ),
-                enabled: false,
+                enabled: true,
               )
             ],
           ),
         ),
-        Container(
+        SizedBox(
           height: 50,
           width: 50,
-          child: const Icon(
-            Icons.arrow_upward,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_upward),
+            tooltip: 'Increase value',
+            onPressed: () {
+              double value = double.parse(controller.text);
+              value += 10.00;
+              controller.text = value.toStringAsFixed(2);
+            },
           ),
         ),
       ],
