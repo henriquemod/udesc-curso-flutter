@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:projeto_modulo_1/views/widgets/action_button.dart';
 
 class ValueContainer extends StatelessWidget {
   final TextEditingController controller;
@@ -8,26 +9,29 @@ class ValueContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    decreaseValue() {
+      double value = double.parse(controller.text);
+      if (value - 10.00 > 0.0) {
+        value -= 10.00;
+      } else {
+        value = 00.00;
+      }
+      controller.text = value.toStringAsFixed(2);
+    }
+
+    increaseValue() {
+      double value = double.parse(controller.text);
+      value += 10.00;
+      controller.text = value.toStringAsFixed(2);
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          height: 50,
-          width: 50,
-          child: IconButton(
+        ActionButton(
+            callback: decreaseValue,
             icon: const Icon(Icons.arrow_downward),
-            tooltip: 'Decrease value',
-            onPressed: () {
-              double value = double.parse(controller.text);
-              if (value - 10.00 > 0.0) {
-                value -= 10.00;
-              } else {
-                value = 00.00;
-              }
-              controller.text = value.toStringAsFixed(2);
-            },
-          ),
-        ),
+            hint: 'Decrease value'),
         SizedBox(
           height: 50,
           width: 150,
@@ -50,19 +54,10 @@ class ValueContainer extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
-          height: 50,
-          width: 50,
-          child: IconButton(
+        ActionButton(
+            callback: increaseValue,
             icon: const Icon(Icons.arrow_upward),
-            tooltip: 'Increase value',
-            onPressed: () {
-              double value = double.parse(controller.text);
-              value += 10.00;
-              controller.text = value.toStringAsFixed(2);
-            },
-          ),
-        ),
+            hint: 'Increase value'),
       ],
     );
   }

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:projeto_modulo_1/models/product_list_model.dart';
 
 class ProductListController {

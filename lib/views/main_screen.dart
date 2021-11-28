@@ -109,11 +109,6 @@ class _MainScreenState extends State<MainScreen> {
                         removeFromList(index, list.getProducts()[index].value);
                       },
                     ),
-                    onTap: () {
-                      setState(() {
-                        //task.isFinish = !task.isFinish!;
-                      });
-                    },
                   ));
                 },
                 itemCount: list.getProducts().length,

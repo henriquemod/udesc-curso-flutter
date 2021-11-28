@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TextInput extends StatelessWidget {
   final TextEditingController controller;
 
-  TextInput({required this.controller});
+  const TextInput({Key? key, required this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

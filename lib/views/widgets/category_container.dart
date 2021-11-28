@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_modulo_1/controllers/categories_controller.dart';
+import 'package:projeto_modulo_1/views/widgets/action_button.dart';
 
 class CategoryContainer extends StatefulWidget {
   final CategoryController catController;
@@ -36,17 +37,10 @@ class _CategoryContainerState extends State<CategoryContainer> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          height: 50,
-          width: 50,
-          child: IconButton(
+        ActionButton(
+            callback: previousItem,
             icon: const Icon(Icons.arrow_downward),
-            tooltip: 'Previous Category',
-            onPressed: () {
-              previousItem();
-            },
-          ),
-        ),
+            hint: 'Previous Category'),
         SizedBox(
           height: 100,
           width: 150,
@@ -65,17 +59,10 @@ class _CategoryContainerState extends State<CategoryContainer> {
             ],
           ),
         ),
-        SizedBox(
-          height: 50,
-          width: 50,
-          child: IconButton(
+        ActionButton(
+            callback: nextItem,
             icon: const Icon(Icons.arrow_upward),
-            tooltip: 'Next Category',
-            onPressed: () {
-              nextItem();
-            },
-          ),
-        ),
+            hint: 'Next Category'),
       ],
     );
   }
