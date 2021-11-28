@@ -20,4 +20,8 @@ class ProductListController {
   removeProduct(int index) {
     productList.removeAt(index);
   }
+
+  clearList() {
+    productList.clear();
+  }
 }
