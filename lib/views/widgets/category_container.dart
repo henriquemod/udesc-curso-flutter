@@ -12,9 +12,6 @@ class CategoryContainer extends StatefulWidget {
 }
 
 class _CategoryContainerState extends State<CategoryContainer> {
-  //CategoryController catController = CategoryController();
-  //int catId = 0;
-
   void nextItem() {
     setState(() {
       widget.catController.selectedCat <
