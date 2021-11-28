@@ -43,7 +43,7 @@ class _CategoryContainerState extends State<CategoryContainer> {
             hint: 'Previous Category'),
         SizedBox(
           height: 100,
-          width: 150,
+          width: 160,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,

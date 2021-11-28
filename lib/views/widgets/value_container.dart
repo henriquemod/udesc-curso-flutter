@@ -34,7 +34,7 @@ class ValueContainer extends StatelessWidget {
             hint: 'Decrease value'),
         SizedBox(
           height: 50,
-          width: 150,
+          width: 160,
           child: Column(
             children: [
               TextField(

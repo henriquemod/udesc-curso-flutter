@@ -25,22 +25,45 @@ class _AddProductState extends State<AddProduct> {
         ),
         body: Column(
           children: [
-            TextInput(controller: controller.productNameController),
+            TextInput(
+              controller: controller.productNameController,
+              placeHolder: 'Nome do item',
+            ),
+            const Spacer(
+              flex: 1,
+            ),
             ValueContainer(
               controller: controller.productValueController,
+            ),
+            const Spacer(
+              flex: 1,
             ),
             CategoryContainer(
               catController: catController,
             ),
+            const Spacer(
+              flex: 3,
+            ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context, [
-                  catController.selectedCat,
-                  controller.productValueController.text,
-                  catController.categories[catController.selectedCat].name
-                ]);
+                if (controller.productNameController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Nome do item precisa ser preenchido"),
+                    duration: Duration(seconds: 1),
+                  ));
+                } else {
+                  Navigator.pop(context, [
+                    catController.selectedCat,
+                    controller.productValueController.text,
+                    catController.categories[catController.selectedCat].name,
+                    controller.productNameController.text
+                  ]);
+                }
               },
               child: const Text('Salvar'),
+            ),
+            const Spacer(
+              flex: 4,
             ),
           ],
         ));

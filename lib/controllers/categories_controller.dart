@@ -4,19 +4,19 @@ import 'package:projeto_modulo_1/models/category_model.dart';
 class CategoryController {
   int selectedCat = 0;
   List<Category> categories = [
-    Category(0, const AssetImage('assets/thumbs/Butter.png'), "Manteiga"),
-    Category(1, const AssetImage('assets/thumbs/Carrot.png'), "Cenoura"),
-    Category(2, const AssetImage('assets/thumbs/Garlic.png'), "Alho"),
-    Category(3, const AssetImage('assets/thumbs/Ice_Cream.png'), "Sorvete"),
-    Category(4, const AssetImage('assets/thumbs/Jellybeans.png'), "Jujubas"),
-    Category(5, const AssetImage('assets/thumbs/Meat.png'), "Carne"),
-    Category(
-        6, const AssetImage('assets/thumbs/Monster_Lasagna.png'), "Lasanha"),
-    Category(7, const AssetImage('assets/thumbs/Onion.png'), "Cebola"),
-    Category(8, const AssetImage('assets/thumbs/Pepper.png'), "Pimenta"),
-    Category(9, const AssetImage('assets/thumbs/Potato.png'), "Batata"),
-    Category(
-        10, const AssetImage('assets/thumbs/Pumpkin_Cookies.png'), "Cookies")
+    Category(0, const AssetImage('assets/thumbs/bebidas.png'), "Bebidas"),
+    Category(1, const AssetImage('assets/thumbs/biscoitos.png'), "Biscoitos"),
+    Category(2, const AssetImage('assets/thumbs/cafes.png'), "Cafeinados"),
+    Category(3, const AssetImage('assets/thumbs/carnes.png'), "Carnes"),
+    Category(4, const AssetImage('assets/thumbs/frutas.png'), "Frutas"),
+    Category(5, const AssetImage('assets/thumbs/fungos.png'), "Fungos"),
+    Category(6, const AssetImage('assets/thumbs/lacteos.png'), "Lácteos"),
+    Category(7, const AssetImage('assets/thumbs/legumes.png'), "Legumes"),
+    Category(8, const AssetImage('assets/thumbs/raizes.png'), "Raizes"),
+    Category(9, const AssetImage('assets/thumbs/sementes.png'), "Sementes"),
+    Category(10, const AssetImage('assets/thumbs/vegetais.png'), "Vegetais"),
+    Category(11, const AssetImage('assets/thumbs/verduras.png'), "Verduras"),
+    Category(12, const AssetImage('assets/thumbs/doces.png'), "Doces")
   ];
 
   CategoryController();

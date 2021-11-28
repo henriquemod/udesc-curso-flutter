@@ -16,9 +16,9 @@ class _MainScreenState extends State<MainScreen> {
   CategoryController catController = CategoryController();
   double totalValue = 00.00;
 
-  addToLit(int id, double value) {
+  addToLit(String name, int id, double value) {
     setState(() {
-      list.addProduct(id, value);
+      list.addProduct(name, id, value);
       totalValue += value;
     });
   }
@@ -52,6 +52,7 @@ class _MainScreenState extends State<MainScreen> {
         ));
     if (result != null) {
       addToLit(
+          result[3],
           result[0],
           double.parse(
             result[1],
@@ -76,9 +77,13 @@ class _MainScreenState extends State<MainScreen> {
             ),
             tooltip: 'Clear List',
             onPressed: () {
-              clearList();
+              String callbackMessage = "Lista já esta vazia";
+              if (list.getProducts().length > 0) {
+                clearList();
+                callbackMessage = 'Lista limpa';
+              }
               ScaffoldMessenger.of(context)
-                  .showSnackBar(const SnackBar(content: Text('Lista limpa')));
+                  .showSnackBar(SnackBar(content: Text(callbackMessage)));
             },
           ),
         ],
@@ -99,11 +104,16 @@ class _MainScreenState extends State<MainScreen> {
                       backgroundColor: Colors
                           .transparent, // no matter how big it is, it won't overflow
                     ),
-                    title: Text(cat.name),
+                    title: Text(list.getProducts()[index].name,
+                        style: const TextStyle(
+                          fontSize: 18,
+                        )),
                     subtitle: Text(
-                        'Valor: ${list.getProducts()[index].value.toStringAsFixed(2)}'),
+                        'R\$${list.getProducts()[index].value.toStringAsFixed(2)}'),
                     trailing: IconButton(
-                      icon: const Icon(Icons.arrow_downward),
+                      icon: const Icon(
+                        Icons.delete_outline,
+                      ),
                       tooltip: 'Remove item',
                       onPressed: () {
                         removeFromList(index, list.getProducts()[index].value);
@@ -116,7 +126,12 @@ class _MainScreenState extends State<MainScreen> {
           Flexible(
               flex: 1,
               child: Center(
-                child: Text("Total: R\$${totalValue.toStringAsFixed(2)}"),
+                child: Text(
+                  "Total: R\$${totalValue.toStringAsFixed(2)}",
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
               ))
         ],
       ),

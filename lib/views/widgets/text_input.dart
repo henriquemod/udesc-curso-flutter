@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 class TextInput extends StatelessWidget {
+  final String placeHolder;
   final TextEditingController controller;
 
-  const TextInput({Key? key, required this.controller}) : super(key: key);
+  const TextInput(
+      {Key? key, required this.controller, required this.placeHolder})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
       child: TextField(
-        decoration: const InputDecoration(hintText: 'Nome da item'),
+        decoration: InputDecoration(hintText: placeHolder),
         controller: controller,
       ),
     );

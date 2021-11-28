@@ -11,8 +11,8 @@ class ProductListController {
     return productList;
   }
 
-  addProduct(int productID, double value) {
-    productList.add(ProductList(productID, value));
+  addProduct(String name, int productID, double value) {
+    productList.add(ProductList(name, productID, value));
   }
 
   removeProduct(int index) {
