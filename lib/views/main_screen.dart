@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_modulo_1/controllers/categories_controller.dart';
+import 'package:projeto_modulo_1/controllers/product_list_controller.dart';
+import 'package:projeto_modulo_1/models/category_model.dart';
 import 'package:projeto_modulo_1/views/add_product_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -9,12 +12,47 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<String> words = [];
+  ProductListController list = ProductListController();
+  CategoryController catController = CategoryController();
+  double totalValue = 00.00;
 
-  _navigator(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) {
-      return const AddProduct();
-    }));
+  addToLit(int id, double value) {
+    setState(() {
+      list.addProduct(id, value);
+      totalValue += value;
+    });
+  }
+
+  removeFromList(int index, double value) {
+    setState(() {
+      list.removeProduct(index);
+      totalValue -= value;
+    });
+  }
+
+  subValue(double value) {
+    setState(() {
+      totalValue -= value;
+    });
+  }
+
+  void _navigator(context) async {
+    var result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const AddProduct(),
+          fullscreenDialog: true,
+        ));
+    addToLit(
+        result[0],
+        double.parse(
+          result[1],
+        ));
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Adicionados ${result[1]} de ${result[2]}"),
+      duration: const Duration(seconds: 2),
+    ));
   }
 
   @override
@@ -30,18 +68,39 @@ class _MainScreenState extends State<MainScreen> {
               flex: 6,
               child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                      color: Colors.red,
-                      child: Center(
-                        child: Text(words[index]),
-                      ));
+                  Category? cat = catController
+                      .findCategory(list.getProducts()[index].productID);
+                  return InkWell(
+                      child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: (cat!.thumb),
+                      backgroundColor: Colors
+                          .transparent, // no matter how big it is, it won't overflow
+                    ),
+                    title: Text(cat.name),
+                    subtitle: Text(
+                        'Valor: ' + list.getProducts()[index].value.toString()),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.arrow_downward),
+                      tooltip: 'Remove item',
+                      onPressed: () {
+                        removeFromList(index, list.getProducts()[index].value);
+                      },
+                    ),
+                    onTap: () {
+                      setState(() {
+                        //task.isFinish = !task.isFinish!;
+                      });
+                    },
+                  ));
                 },
-                itemCount: words.length,
+                itemCount: list.getProducts().length,
               )),
-          const Flexible(
+          Flexible(
               flex: 1,
               child: Center(
-                child: Text("Total: R\$00,00"),
+                child: Text("Total: R\$" + totalValue.toString()),
               ))
         ],
       ),

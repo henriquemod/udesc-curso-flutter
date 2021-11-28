@@ -5,6 +5,6 @@ class AddProductController {
   final productValueController = TextEditingController();
 
   AddProductController() {
-    productValueController.text = "10,00";
+    productValueController.text = "10.00";
   }
 }

@@ -20,4 +20,12 @@ class CategoryController {
   ];
 
   CategoryController();
+
+  findCategory(int id) {
+    for (var cat in categories) {
+      if (cat.id == id) {
+        return cat;
+      }
+    }
+  }
 }

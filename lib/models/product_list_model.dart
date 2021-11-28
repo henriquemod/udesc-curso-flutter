@@ -1,5 +1,8 @@
-import 'package:projeto_modulo_1/models/product_model.dart';
+import 'dart:ffi';
 
 class ProductList {
-  List<Product>? productList;
+  int productID;
+  double value;
+
+  ProductList(this.productID, this.value);
 }

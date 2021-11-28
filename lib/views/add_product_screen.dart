@@ -35,8 +35,13 @@ class _AddProductState extends State<AddProduct> {
             ElevatedButton(
               onPressed: () {
                 // ignore: avoid_print
-                print(catController.selectedCat);
-                controller.productNameController.clear();
+                Navigator.pop(context, [
+                  catController.selectedCat,
+                  controller.productValueController.text,
+                  catController.categories[catController.selectedCat].name
+                ]);
+                //print(catController.selectedCat);
+                //controller.productNameController.clear();
               },
               child: const Text('Salvar'),
             ),
