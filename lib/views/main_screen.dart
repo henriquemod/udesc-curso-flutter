@@ -85,16 +85,16 @@ class _MainScreenState extends State<MainScreen> {
                       child: ListTile(
                     leading: CircleAvatar(
                       radius: 30,
-                      backgroundImage: (cat!.thumb),
+                      backgroundImage: (cat.thumb),
                       backgroundColor: Colors
                           .transparent, // no matter how big it is, it won't overflow
                     ),
-                    title: Text(list.getProducts()[index].name,
+                    title: Text(list.getProduct(index).name,
                         style: const TextStyle(
                           fontSize: 18,
                         )),
                     subtitle: Text(
-                        'R\$${list.getProducts()[index].value.toStringAsFixed(2)}'),
+                        'R\$${list.getProduct(index).value.toStringAsFixed(2)}'),
                     trailing: IconButton(
                       icon: const Icon(
                         Icons.delete_outline,

@@ -12,6 +12,10 @@ class ProductListController {
     return productList;
   }
 
+  Product getProduct(int index) {
+    return productList.elementAt(index);
+  }
+
   addProduct(Product product) {
     this.productList.add(product);
     listValue += product.value;
