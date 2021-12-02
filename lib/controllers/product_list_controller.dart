@@ -1,20 +1,20 @@
-import 'package:projeto_modulo_1/models/product_list_model.dart';
+import 'package:projeto_modulo_1/models/product_model.dart';
 
 class ProductListController {
-  late List<ProductList> productList;
+  late List<Product> productList;
   double listValue = 00.00;
 
   ProductListController() {
-    productList = <ProductList>[];
+    productList = <Product>[];
   }
 
-  List<ProductList> getProducts() {
+  List<Product> getProducts() {
     return productList;
   }
 
-  addProduct(ProductList productList) {
-    this.productList.add(productList);
-    listValue += productList.value;
+  addProduct(Product product) {
+    this.productList.add(product);
+    listValue += product.value;
   }
 
   removeProduct(int index) {

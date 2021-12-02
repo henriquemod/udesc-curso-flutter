@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_modulo_1/controllers/categories_controller.dart';
 import 'package:projeto_modulo_1/controllers/product_list_controller.dart';
 import 'package:projeto_modulo_1/models/category_model.dart';
-import 'package:projeto_modulo_1/models/product_list_model.dart';
+import 'package:projeto_modulo_1/models/product_model.dart';
 import 'package:projeto_modulo_1/views/add_product_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -16,9 +16,9 @@ class _MainScreenState extends State<MainScreen> {
   ProductListController list = ProductListController();
   CategoryController catController = CategoryController();
 
-  void addToLit(ProductList productList) {
+  void addToLit(Product product) {
     setState(() {
-      list.addProduct(productList);
+      list.addProduct(product);
     });
   }
 
@@ -35,14 +35,15 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _navigator(context) async {
-    var product = await Navigator.push(
+    Product? product = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => const AddProduct(),
           fullscreenDialog: true,
         ));
+
     if (product != null) {
-      addToLit(product[0]);
+      addToLit(product);
     }
   }
 
@@ -79,7 +80,7 @@ class _MainScreenState extends State<MainScreen> {
               child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
                   Category? cat = catController
-                      .findCategory(list.getProducts()[index].productID);
+                      .getCategory(list.getProducts()[index].cat.id);
                   return InkWell(
                       child: ListTile(
                     leading: CircleAvatar(

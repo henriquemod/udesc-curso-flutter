@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:projeto_modulo_1/models/category_model.dart';
 
 class CategoryController {
-  int selectedCat = 0;
   List<Category> categories = [
     Category(0, const AssetImage('assets/thumbs/bebidas.png'), "Bebidas"),
     Category(1, const AssetImage('assets/thumbs/biscoitos.png'), "Biscoitos"),
@@ -19,13 +18,9 @@ class CategoryController {
     Category(12, const AssetImage('assets/thumbs/doces.png'), "Doces")
   ];
 
-  CategoryController();
+  int selectedCat = 0;
 
-  findCategory(int id) {
-    for (var cat in categories) {
-      if (cat.id == id) {
-        return cat;
-      }
-    }
+  Category getCategory(int index) {
+    return categories.elementAt(index);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_modulo_1/controllers/add_product_controller.dart';
 import 'package:projeto_modulo_1/controllers/categories_controller.dart';
-import 'package:projeto_modulo_1/models/product_list_model.dart';
+import 'package:projeto_modulo_1/models/product_model.dart';
 import 'package:projeto_modulo_1/views/widgets/category_container.dart';
 import 'package:projeto_modulo_1/views/widgets/text_input.dart';
 import 'package:projeto_modulo_1/views/widgets/value_container.dart';
@@ -53,13 +53,14 @@ class _AddProductState extends State<AddProduct> {
                     duration: Duration(seconds: 1),
                   ));
                 } else {
-                  Navigator.pop(context, [
-                    new ProductList(
-                        catController
-                            .categories[catController.selectedCat].name,
-                        catController.selectedCat,
-                        double.parse(controller.productValueController.text))
-                  ]);
+                  Navigator.pop(
+                      context,
+                      new Product(
+                          name: controller.productNameController.text,
+                          cat: catController
+                              .getCategory(catController.selectedCat),
+                          value: double.parse(
+                              controller.productValueController.text)));
                 }
               },
               child: const Text('Salvar'),
