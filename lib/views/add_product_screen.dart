@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_modulo_1/controllers/add_product_controller.dart';
 import 'package:projeto_modulo_1/controllers/categories_controller.dart';
+import 'package:projeto_modulo_1/models/product_list_model.dart';
 import 'package:projeto_modulo_1/views/widgets/category_container.dart';
 import 'package:projeto_modulo_1/views/widgets/text_input.dart';
 import 'package:projeto_modulo_1/views/widgets/value_container.dart';
@@ -53,10 +54,11 @@ class _AddProductState extends State<AddProduct> {
                   ));
                 } else {
                   Navigator.pop(context, [
-                    catController.selectedCat,
-                    controller.productValueController.text,
-                    catController.categories[catController.selectedCat].name,
-                    controller.productNameController.text
+                    new ProductList(
+                        catController
+                            .categories[catController.selectedCat].name,
+                        catController.selectedCat,
+                        double.parse(controller.productValueController.text))
                   ]);
                 }
               },
