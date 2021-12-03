@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_modulo_1/controllers/categories_controller.dart';
+import 'package:projeto_modulo_1/models/category_model.dart';
 import 'package:projeto_modulo_1/views/widgets/action_button.dart';
 
 class CategoryContainer extends StatefulWidget {
@@ -15,25 +16,20 @@ class CategoryContainer extends StatefulWidget {
 class _CategoryContainerState extends State<CategoryContainer> {
   void nextItem() {
     setState(() {
-      widget.catController.selectedCat <
-              widget.catController.categories.length - 1
-          ? widget.catController.selectedCat++
-          : widget.catController.selectedCat = 0;
+      widget.catController.nextCat();
     });
   }
 
   void previousItem() {
     setState(() {
-      widget.catController.selectedCat--;
-      widget.catController.selectedCat > 0
-          ? widget.catController.selectedCat--
-          : widget.catController.selectedCat =
-              widget.catController.categories.length - 1;
+      widget.catController.previousCat();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    int catIndex = widget.catController.selectedCat;
+    Category category = widget.catController.categories[catIndex];
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -49,13 +45,13 @@ class _CategoryContainerState extends State<CategoryContainer> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image(
-                  image: widget.catController
-                      .categories[widget.catController.selectedCat].thumb),
+                image: category.thumb,
+              ),
               const Spacer(),
               Text(
-                  widget.catController
-                      .categories[widget.catController.selectedCat].name,
-                  style: const TextStyle(fontSize: 18))
+                category.name,
+                style: const TextStyle(fontSize: 18),
+              )
             ],
           ),
         ),

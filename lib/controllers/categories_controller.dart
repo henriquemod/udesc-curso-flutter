@@ -20,6 +20,15 @@ class CategoryController {
 
   int selectedCat = 0;
 
+  void nextCat() {
+    selectedCat < categories.length - 1 ? selectedCat++ : selectedCat = 0;
+  }
+
+  void previousCat() {
+    selectedCat--;
+    selectedCat > 0 ? selectedCat-- : selectedCat = categories.length - 1;
+  }
+
   Category getCategory(int index) {
     return categories.elementAt(index);
   }
