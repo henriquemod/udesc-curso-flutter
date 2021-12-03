@@ -79,8 +79,8 @@ class _MainScreenState extends State<MainScreen> {
               flex: 6,
               child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
-                  Category? cat = catController
-                      .getCategory(list.getProducts()[index].cat.id);
+                  Category? cat =
+                      catController.getCategory(list.getProduct(index).cat.id);
                   return InkWell(
                       child: ListTile(
                     leading: CircleAvatar(
