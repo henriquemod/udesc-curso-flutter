@@ -1,0 +1,4 @@
+#Sun Jan 09 15:00:51 BRT 2022
+base.0=/home/henrique/Development/CursoFlutter-Udesc/udesc-curso-flutter/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
