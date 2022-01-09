@@ -23,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   CategoryController catController = CategoryController();
   LocationData? locationData;
   List<StreamSubscription> subscriptions = [];
+  Map<int, MemoryImage> thumbMap = {};
 
   @override
   void initState() {
@@ -51,12 +52,14 @@ class _MainScreenState extends State<MainScreen> {
   void removeFromList(int index) {
     setState(() {
       list.removeProduct(index);
+      thumbMap.remove(index);
     });
   }
 
   void clearList() {
     setState(() {
       list.clearList();
+      thumbMap.clear();
     });
   }
 
@@ -116,8 +119,13 @@ class _MainScreenState extends State<MainScreen> {
 
                   MemoryImage? imageProvider;
                   if (currentProduct.customThumbBase64 != null) {
-                    imageProvider = MemoryImage(Convert.decodeBase64Image(
-                        currentProduct.customThumbBase64!));
+                    if (thumbMap.containsKey(index)) {
+                      imageProvider = thumbMap[index];
+                    } else {
+                      imageProvider = MemoryImage(Convert.decodeBase64Image(
+                          currentProduct.customThumbBase64!));
+                      thumbMap.addAll({index: imageProvider});
+                    }
                   }
 
                   Category? cat =
