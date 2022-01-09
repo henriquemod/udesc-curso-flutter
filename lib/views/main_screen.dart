@@ -3,6 +3,7 @@ import 'package:projeto_modulo_1/controllers/categories_controller.dart';
 import 'package:projeto_modulo_1/controllers/product_list_controller.dart';
 import 'package:projeto_modulo_1/models/category_model.dart';
 import 'package:projeto_modulo_1/models/product_model.dart';
+import 'package:projeto_modulo_1/nav_bar.dart';
 import 'package:projeto_modulo_1/views/add_product_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -50,6 +51,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavBar(),
       appBar: AppBar(
         title: const Text("Lista de compras"),
         centerTitle: true,
