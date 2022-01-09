@@ -9,6 +9,7 @@ import 'package:projeto_modulo_1/models/product_model.dart';
 import 'package:projeto_modulo_1/nav_bar.dart';
 import 'package:projeto_modulo_1/utils/convert.dart';
 import 'package:projeto_modulo_1/views/add_product_screen.dart';
+import 'package:projeto_modulo_1/views/widgets/product_ink_well.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -106,6 +107,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: Column(
         children: [
+          const SizedBox(height: 20),
           Flexible(
               flex: 6,
               child: ListView.builder(
@@ -129,36 +131,13 @@ class _MainScreenState extends State<MainScreen> {
                   var subText =
                       'R\$ ${currentProduct.value.toStringAsFixed(2)}\n'
                       'Lat: $curLat - Long: $curLong';
-                  return InkWell(
-                      child: ListTile(
-                    leading: (imageProvider != null)
-                        ? CircleAvatar(
-                            radius: 30,
-                            backgroundImage: imageProvider,
-                            backgroundColor: Colors
-                                .transparent, // no matter how big it is, it won't overflow
-                          )
-                        : CircleAvatar(
-                            radius: 30,
-                            backgroundImage: cat.thumb,
-                            backgroundColor: Colors
-                                .transparent, // no matter how big it is, it won't overflow
-                          ),
-                    title: Text(currentProduct.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                        )),
-                    subtitle: Text(subText),
-                    trailing: IconButton(
-                      icon: const Icon(
-                        Icons.delete_outline,
-                      ),
-                      tooltip: 'Remove item',
-                      onPressed: () {
-                        removeFromList(index);
-                      },
-                    ),
-                  ));
+                  return ProductInkWell(
+                      index: index,
+                      title: currentProduct.name,
+                      subTitle: subText,
+                      imageProvider: imageProvider,
+                      thumb: cat.thumb,
+                      handleRemove: removeFromList);
                 },
                 itemCount: list.getProducts().length,
               )),
