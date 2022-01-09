@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:projeto_modulo_1/controllers/categories_controller.dart';
 import 'package:projeto_modulo_1/controllers/product_list_controller.dart';
 import 'package:projeto_modulo_1/models/category_model.dart';
@@ -16,6 +19,26 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   ProductListController list = ProductListController();
   CategoryController catController = CategoryController();
+  LocationData? locationData;
+  List<StreamSubscription> subscriptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocarion();
+    subscriptions
+        .add(Location.instance.onLocationChanged.listen(_listenLocationData));
+  }
+
+  void _getCurrentLocarion() async {
+    locationData = await Location.instance.getLocation();
+  }
+
+  void _listenLocationData(LocationData event) {
+    setState(() {
+      locationData = event;
+    });
+  }
 
   void addToLit(Product product) {
     setState(() {
@@ -44,6 +67,11 @@ class _MainScreenState extends State<MainScreen> {
         ));
 
     if (product != null) {
+      if (locationData != null) {
+        product.latitude = locationData!.latitude;
+        product.longitude = locationData!.longitude;
+      }
+
       addToLit(product);
     }
   }
@@ -83,6 +111,15 @@ class _MainScreenState extends State<MainScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   Category? cat =
                       catController.getCategory(list.getProduct(index).cat.id);
+                  var curLat = (list.getProduct(index).latitude != null)
+                      ? list.getProduct(index).latitude!.toStringAsFixed(4)
+                      : 'N/A';
+                  var curLong = (list.getProduct(index).longitude != null)
+                      ? list.getProduct(index).longitude!.toStringAsFixed(4)
+                      : 'N/A';
+                  var subText =
+                      'R\$ ${list.getProduct(index).value.toStringAsFixed(2)}\n'
+                      'Lat: ${curLat} - Long: ${curLong}';
                   return InkWell(
                       child: ListTile(
                     leading: CircleAvatar(
@@ -95,8 +132,7 @@ class _MainScreenState extends State<MainScreen> {
                         style: const TextStyle(
                           fontSize: 18,
                         )),
-                    subtitle: Text(
-                        'R\$${list.getProduct(index).value.toStringAsFixed(2)}'),
+                    subtitle: Text(subText),
                     trailing: IconButton(
                       icon: const Icon(
                         Icons.delete_outline,
