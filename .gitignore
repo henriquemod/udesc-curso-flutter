@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/flutter
 # Edit at https://www.toptal.com/developers/gitignore?templates=flutter
 
+# VSCode related
+.vscode/
+
 ### Flutter ###
 # Flutter/Dart/Pub related
 **/doc/api/

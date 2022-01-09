@@ -9,7 +9,10 @@ import 'package:projeto_modulo_1/models/product_model.dart';
 import 'package:projeto_modulo_1/nav_bar.dart';
 import 'package:projeto_modulo_1/utils/convert.dart';
 import 'package:projeto_modulo_1/views/add_product_screen.dart';
+import 'package:projeto_modulo_1/views/notifications_screen.dart';
 import 'package:projeto_modulo_1/views/widgets/product_ink_well.dart';
+
+import '../api/notifications_api.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -28,9 +31,21 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    NotificationApi.init();
+    listenNotifications();
     _getCurrentLocarion();
     subscriptions
         .add(Location.instance.onLocationChanged.listen(_listenLocationData));
+  }
+
+  listenNotifications() {
+    NotificationApi.onNotification.stream.listen((event) {
+      if (event == "simples.01") {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
+          return const MainScreen();
+        }));
+      }
+    });
   }
 
   void _getCurrentLocarion() async {
@@ -81,10 +96,28 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  void notificationNavigator(context) async {
+    Product? product = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const NotificationScreen(),
+          fullscreenDialog: true,
+        ));
+
+    if (product != null) {
+      if (locationData != null) {
+        product.latitude = locationData!.latitude;
+        product.longitude = locationData!.longitude;
+      }
+
+      addToLit(product);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavBar(),
+      drawer: NavBar(notificationNavigation: notificationNavigator),
       appBar: AppBar(
         title: const Text("Lista de compras"),
         centerTitle: true,

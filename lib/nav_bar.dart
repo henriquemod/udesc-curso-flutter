@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {
+  final Function notificationNavigation;
+
+  const NavBar({Key? key, required this.notificationNavigation})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -31,7 +36,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.notifications),
             title: Text('Notificações'),
-            onTap: () => null,
+            onTap: () => notificationNavigation(context),
           ),
         ],
       ),
