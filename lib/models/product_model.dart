@@ -6,6 +6,11 @@ class Product {
   double value;
   double? latitude;
   double? longitude;
+  String? customThumbBase64;
 
-  Product({required this.name, required this.cat, required this.value});
+  Product(
+      {required this.name,
+      required this.cat,
+      required this.value,
+      this.customThumbBase64});
 }

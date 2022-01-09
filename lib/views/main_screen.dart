@@ -7,6 +7,7 @@ import 'package:projeto_modulo_1/controllers/product_list_controller.dart';
 import 'package:projeto_modulo_1/models/category_model.dart';
 import 'package:projeto_modulo_1/models/product_model.dart';
 import 'package:projeto_modulo_1/nav_bar.dart';
+import 'package:projeto_modulo_1/utils/convert.dart';
 import 'package:projeto_modulo_1/views/add_product_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -91,7 +92,7 @@ class _MainScreenState extends State<MainScreen> {
             tooltip: 'Clear List',
             onPressed: () {
               String callbackMessage = "Lista já esta vazia";
-              if (list.getProducts().length > 0) {
+              if (list.getProducts().isNotEmpty) {
                 clearList();
                 callbackMessage = 'Lista limpa';
               }
@@ -109,26 +110,41 @@ class _MainScreenState extends State<MainScreen> {
               flex: 6,
               child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
+                  Product currentProduct = list.getProduct(index);
+
+                  MemoryImage? imageProvider;
+                  if (currentProduct.customThumbBase64 != null) {
+                    imageProvider = MemoryImage(Convert.decodeBase64Image(
+                        currentProduct.customThumbBase64!));
+                  }
+
                   Category? cat =
-                      catController.getCategory(list.getProduct(index).cat.id);
-                  var curLat = (list.getProduct(index).latitude != null)
-                      ? list.getProduct(index).latitude!.toStringAsFixed(4)
+                      catController.getCategory(currentProduct.cat.id);
+                  var curLat = (currentProduct.latitude != null)
+                      ? currentProduct.latitude!.toStringAsFixed(4)
                       : 'N/A';
-                  var curLong = (list.getProduct(index).longitude != null)
-                      ? list.getProduct(index).longitude!.toStringAsFixed(4)
+                  var curLong = (currentProduct.longitude != null)
+                      ? currentProduct.longitude!.toStringAsFixed(4)
                       : 'N/A';
                   var subText =
-                      'R\$ ${list.getProduct(index).value.toStringAsFixed(2)}\n'
-                      'Lat: ${curLat} - Long: ${curLong}';
+                      'R\$ ${currentProduct.value.toStringAsFixed(2)}\n'
+                      'Lat: $curLat - Long: $curLong';
                   return InkWell(
                       child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 30,
-                      backgroundImage: (cat.thumb),
-                      backgroundColor: Colors
-                          .transparent, // no matter how big it is, it won't overflow
-                    ),
-                    title: Text(list.getProduct(index).name,
+                    leading: (imageProvider != null)
+                        ? CircleAvatar(
+                            radius: 30,
+                            backgroundImage: imageProvider,
+                            backgroundColor: Colors
+                                .transparent, // no matter how big it is, it won't overflow
+                          )
+                        : CircleAvatar(
+                            radius: 30,
+                            backgroundImage: cat.thumb,
+                            backgroundColor: Colors
+                                .transparent, // no matter how big it is, it won't overflow
+                          ),
+                    title: Text(currentProduct.name,
                         style: const TextStyle(
                           fontSize: 18,
                         )),
