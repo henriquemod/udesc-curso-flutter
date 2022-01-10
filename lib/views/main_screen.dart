@@ -66,6 +66,7 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       list.addProduct(product);
     });
+    profileController.updateProductList(list.getProducts());
   }
 
   void removeFromList(int index) {
