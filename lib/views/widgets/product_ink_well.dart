@@ -22,6 +22,7 @@ class ProductInkWell extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         child: ListTile(
+      minVerticalPadding: 20,
       leading: (imageProvider != null)
           ? CircleAvatar(
               radius: 30,
