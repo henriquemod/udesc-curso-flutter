@@ -7,6 +7,7 @@ import 'package:projeto_modulo_1/controllers/product_list_controller.dart';
 import 'package:projeto_modulo_1/controllers/profile_controller.dart';
 import 'package:projeto_modulo_1/models/category_model.dart';
 import 'package:projeto_modulo_1/models/product_model.dart';
+import 'package:projeto_modulo_1/models/profile_model.dart';
 import 'package:projeto_modulo_1/nav_bar.dart';
 import 'package:projeto_modulo_1/utils/convert.dart';
 import 'package:projeto_modulo_1/views/add_product_screen.dart';
@@ -28,7 +29,8 @@ class _MainScreenState extends State<MainScreen> {
   LocationData? locationData;
   List<StreamSubscription> subscriptions = [];
   Map<int, MemoryImage> thumbMap = {};
-  ProfileController profileController = ProfileController();
+  ProfileController profileController =
+      ProfileController(profile: Profile(notificationFrequency: 0));
 
   @override
   void initState() {
@@ -99,27 +101,17 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void notificationNavigator(context) async {
-    Product? product = await Navigator.push(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) =>
               NotificationScreen(profileController: profileController),
           fullscreenDialog: true,
         ));
-
-    if (product != null) {
-      if (locationData != null) {
-        product.latitude = locationData!.latitude;
-        product.longitude = locationData!.longitude;
-      }
-
-      addToLit(product);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print(profileController.isSelected.length);
     return Scaffold(
       drawer: NavBar(notificationNavigation: notificationNavigator),
       appBar: AppBar(

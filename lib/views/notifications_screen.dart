@@ -13,12 +13,19 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  List<bool> isSelected = [true, false, false, false, false, false, false];
-  int selectedIndex = 0;
+  List<bool> isSelected = [false, false, false, false, false];
+  late int selectedIndex;
 
   @override
   Widget build(BuildContext context) {
-    widget.profileController.timers;
+    selectedIndex = widget.profileController.profile.notificationFrequency;
+    for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
+      if (buttonIndex == selectedIndex) {
+        isSelected[buttonIndex] = true;
+      } else {
+        isSelected[buttonIndex] = false;
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Notificações"),
@@ -31,12 +38,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
             direction: Axis.vertical,
             children: const <Widget>[
               Text('Desligado'),
-              Text('Dias vezes ao dia'),
+              Text('A cada minuto'),
+              Text('A cada hora'),
               Text('Diariamente'),
               Text('Semanalmente'),
-              Text('Mensalmente'),
-              Text('<Dev> 15 Sec'),
-              Text('<Dev> 30 Sec'),
             ],
             onPressed: (int index) {
               setState(() {
@@ -49,26 +54,35 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     isSelected[buttonIndex] = false;
                   }
                 }
-                selectedIndex = index;
+                widget.profileController.profile.notificationFrequency = index;
               });
             },
             isSelected: isSelected,
           ),
           TextButton(
             onPressed: () {
-              int? delay2 = widget.profileController.timers[selectedIndex];
-              if (delay2 != null) {
-                //DateTime currDate = DateTime.now();
-                NotificationApi.scheduleNotificationWithBodyText(
-                  id: 0,
-                  title: "Localização a $delay2 atrás",
-                  body: "Ola mundo",
-                  payload: "simles.02",
-                  data: DateTime.now().add(Duration(seconds: delay2)),
-                );
+              switch (widget.profileController.profile.notificationFrequency) {
+                case 0:
+                  NotificationApi.cancelAll();
+                  break;
+                case 1:
+                  NotificationApi.everyMinute();
+                  break;
+                case 2:
+                  NotificationApi.everyHour();
+                  break;
+                case 3:
+                  NotificationApi.everyDay();
+                  break;
+                case 4:
+                  NotificationApi.everyWeek();
+                  break;
+                default:
+                  NotificationApi.cancelAll();
               }
+              Navigator.pop(context);
             },
-            child: const Text("Agendar"),
+            child: const Text("Salvar"),
           ),
         ],
       )),

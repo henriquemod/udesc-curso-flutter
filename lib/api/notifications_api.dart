@@ -6,6 +6,11 @@ class NotificationApi {
   static final _notifications = FlutterLocalNotificationsPlugin();
   static final onNotification = BehaviorSubject<String?>();
 
+  static const defaulId = 0;
+  static const defaultTitle = 'Aplicativo lista de compras';
+  static const defaultBody = 'Bora cadastrar um novo item?';
+  static const defaultPaylod = 'simles.02';
+
   static Future _notificationDetails({String? bodyText}) async {
     BigTextStyleInformation style = bodyText != null
         ? BigTextStyleInformation(bodyText)
@@ -97,5 +102,58 @@ class NotificationApi {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );
+  }
+
+  // ANCHOR - By minute
+  static Future everyMinute({
+    int id = 0,
+    String title = defaultTitle,
+    String body = defaultBody,
+    String payload = defaultPaylod,
+  }) async {
+    _notifications.periodicallyShow(id, title, body, RepeatInterval.everyMinute,
+        await _notificationDetails(bodyText: body),
+        androidAllowWhileIdle: true);
+  }
+
+  // ANCHOR - By hour
+  static Future everyHour({
+    int id = 0,
+    String title = defaultTitle,
+    String body = defaultBody,
+    String payload = defaultPaylod,
+  }) async {
+    _notifications.periodicallyShow(id, title, body, RepeatInterval.hourly,
+        await _notificationDetails(bodyText: body),
+        androidAllowWhileIdle: true);
+  }
+
+  // ANCHOR - By day
+  static Future everyDay({
+    int id = 0,
+    String title = defaultTitle,
+    String body = defaultBody,
+    String payload = defaultPaylod,
+  }) async {
+    _notifications.periodicallyShow(id, title, body, RepeatInterval.daily,
+        await _notificationDetails(bodyText: body),
+        androidAllowWhileIdle: true);
+  }
+
+  // ANCHOR - By week
+  static Future everyWeek({
+    int id = 0,
+    String title = defaultTitle,
+    String body = defaultBody,
+    String payload = defaultPaylod,
+  }) async {
+    _notifications.periodicallyShow(id, title, body, RepeatInterval.weekly,
+        await _notificationDetails(bodyText: body),
+        androidAllowWhileIdle: true);
+  }
+
+  // ANCHOR
+  static Future cancelAll() async {
+    await _notifications.cancelAll();
   }
 }

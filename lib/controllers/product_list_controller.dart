@@ -17,7 +17,7 @@ class ProductListController {
   }
 
   addProduct(Product product) {
-    this.productList.add(product);
+    productList.add(product);
     listValue += product.value;
   }
 

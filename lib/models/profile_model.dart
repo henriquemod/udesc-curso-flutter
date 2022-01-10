@@ -11,9 +11,7 @@ Notifications
 
 class Profile {
   List<Product>? userProductList;
-  int? notificationFrequency;
-  int? customFrequency;
+  int notificationFrequency;
 
-  Profile(
-      {this.userProductList, this.notificationFrequency, this.customFrequency});
+  Profile({this.userProductList, required this.notificationFrequency});
 }
