@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_modulo_1/api/notifications_api.dart';
 import 'package:projeto_modulo_1/controllers/profile_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class NotificationScreen extends StatefulWidget {
   ProfileController profileController;
-  NotificationScreen({Key? key, required this.profileController})
+  SharedPreferences sharedPreferences;
+  NotificationScreen(
+      {Key? key,
+      required this.profileController,
+      required this.sharedPreferences})
       : super(key: key);
 
   @override
@@ -61,7 +66,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
           TextButton(
             onPressed: () {
-              switch (widget.profileController.profile.notificationFrequency) {
+              int freq = widget.profileController.profile.notificationFrequency;
+              switch (freq) {
                 case 0:
                   NotificationApi.cancelAll();
                   break;
@@ -80,6 +86,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 default:
                   NotificationApi.cancelAll();
               }
+              widget.sharedPreferences.setString("frequency", freq.toString());
               Navigator.pop(context);
             },
             child: const Text("Salvar"),

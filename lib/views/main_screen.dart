@@ -13,6 +13,7 @@ import 'package:projeto_modulo_1/utils/convert.dart';
 import 'package:projeto_modulo_1/views/add_product_screen.dart';
 import 'package:projeto_modulo_1/views/notifications_screen.dart';
 import 'package:projeto_modulo_1/views/widgets/product_ink_well.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/notifications_api.dart';
 
@@ -24,6 +25,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late SharedPreferences sharedPreferences;
   ProductListController list = ProductListController();
   CategoryController catController = CategoryController();
   LocationData? locationData;
@@ -32,9 +34,23 @@ class _MainScreenState extends State<MainScreen> {
   ProfileController profileController =
       ProfileController(profile: Profile(notificationFrequency: 0));
 
+  void _setNotificationFrequency() {
+    try {
+      String? value = sharedPreferences.getString("frequency");
+      profileController.profile.notificationFrequency =
+          (value != null) ? int.parse(value) : 0;
+    } catch (e) {
+      print("Error");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    SharedPreferences.getInstance()
+        .then((value) => {sharedPreferences = value})
+        .whenComplete(() => _setNotificationFrequency());
+
     NotificationApi.init();
     listenNotifications();
     _getCurrentLocarion();
@@ -105,8 +121,9 @@ class _MainScreenState extends State<MainScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) =>
-              NotificationScreen(profileController: profileController),
+          builder: (BuildContext context) => NotificationScreen(
+              profileController: profileController,
+              sharedPreferences: sharedPreferences),
           fullscreenDialog: true,
         ));
   }
