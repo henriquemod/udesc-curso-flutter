@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:projeto_modulo_1/controllers/categories_controller.dart';
 import 'package:projeto_modulo_1/controllers/product_list_controller.dart';
+import 'package:projeto_modulo_1/controllers/profile_controller.dart';
 import 'package:projeto_modulo_1/models/category_model.dart';
 import 'package:projeto_modulo_1/models/product_model.dart';
 import 'package:projeto_modulo_1/nav_bar.dart';
@@ -27,6 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   LocationData? locationData;
   List<StreamSubscription> subscriptions = [];
   Map<int, MemoryImage> thumbMap = {};
+  ProfileController profileController = ProfileController();
 
   @override
   void initState() {
@@ -100,7 +102,8 @@ class _MainScreenState extends State<MainScreen> {
     Product? product = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const NotificationScreen(),
+          builder: (BuildContext context) =>
+              NotificationScreen(profileController: profileController),
           fullscreenDialog: true,
         ));
 
@@ -116,6 +119,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(profileController.isSelected.length);
     return Scaffold(
       drawer: NavBar(notificationNavigation: notificationNavigator),
       appBar: AppBar(
