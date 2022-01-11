@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:projeto_modulo_1/controllers/categories_controller.dart';
 import 'package:projeto_modulo_1/controllers/product_list_controller.dart';
-import 'package:projeto_modulo_1/controllers/profile_controller.dart';
 import 'package:projeto_modulo_1/models/category_model.dart';
 import 'package:projeto_modulo_1/models/product_model.dart';
-import 'package:projeto_modulo_1/models/profile_model.dart';
 import 'package:projeto_modulo_1/nav_bar.dart';
 import 'package:projeto_modulo_1/repositories/category_repository.dart';
 import 'package:projeto_modulo_1/utils/convert.dart';
@@ -34,19 +32,8 @@ class _MainScreenState extends State<MainScreen> {
   LocationData? locationData;
   List<StreamSubscription> subscriptions = [];
   Map<int, MemoryImage> thumbMap = {};
-  ProfileController profileController =
-      ProfileController(profile: Profile(notificationFrequency: 0));
   bool loading = true;
-
-  void _setNotificationFrequency() {
-    try {
-      String? value = sharedPreferences.getString("frequency");
-      profileController.profile.notificationFrequency =
-          (value != null) ? int.parse(value) : 0;
-    } catch (e) {
-      print("Error");
-    }
-  }
+  late int notificationFrequency;
 
   // ANCHOR LOAD CONTENT
   _loadContent() async {
@@ -99,8 +86,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     DbConnection().conn().whenComplete(_loadContent);
     SharedPreferences.getInstance()
-        .then((value) => {sharedPreferences = value})
-        .whenComplete(() => _setNotificationFrequency());
+        .then((value) => {sharedPreferences = value});
 
     NotificationApi.init();
     listenNotifications();
@@ -152,9 +138,8 @@ class _MainScreenState extends State<MainScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => NotificationScreen(
-              profileController: profileController,
-              sharedPreferences: sharedPreferences),
+          builder: (BuildContext context) =>
+              NotificationScreen(sharedPreferences: sharedPreferences),
           fullscreenDialog: true,
         ));
   }

@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_modulo_1/api/notifications_api.dart';
-import 'package:projeto_modulo_1/controllers/profile_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class NotificationScreen extends StatefulWidget {
-  ProfileController profileController;
   SharedPreferences sharedPreferences;
-  NotificationScreen(
-      {Key? key,
-      required this.profileController,
-      required this.sharedPreferences})
+  NotificationScreen({Key? key, required this.sharedPreferences})
       : super(key: key);
 
   @override
@@ -21,9 +16,29 @@ class _NotificationScreenState extends State<NotificationScreen> {
   List<bool> isSelected = [false, false, false, false, false];
   late int selectedIndex;
 
+  void _loadNotificationSettings() async {
+    try {
+      String? value = widget.sharedPreferences.getString("frequency");
+      setState(() {
+        selectedIndex = (value != null) ? int.parse(value) : 0;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Falha ao carregar configurações"),
+        duration: Duration(seconds: 1),
+      ));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNotificationSettings();
+  }
+
   @override
   Widget build(BuildContext context) {
-    selectedIndex = widget.profileController.profile.notificationFrequency;
+    selectedIndex = selectedIndex;
     for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
       if (buttonIndex == selectedIndex) {
         isSelected[buttonIndex] = true;
@@ -59,15 +74,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     isSelected[buttonIndex] = false;
                   }
                 }
-                widget.profileController.profile.notificationFrequency = index;
+                selectedIndex = index;
               });
             },
             isSelected: isSelected,
           ),
           TextButton(
             onPressed: () {
-              int freq = widget.profileController.profile.notificationFrequency;
-              switch (freq) {
+              switch (selectedIndex) {
                 case 0:
                   NotificationApi.cancelAll();
                   break;
@@ -86,7 +100,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 default:
                   NotificationApi.cancelAll();
               }
-              widget.sharedPreferences.setString("frequency", freq.toString());
+              widget.sharedPreferences
+                  .setString("frequency", selectedIndex.toString());
               Navigator.pop(context);
             },
             child: const Text("Salvar"),
