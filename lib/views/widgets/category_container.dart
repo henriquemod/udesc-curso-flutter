@@ -45,7 +45,7 @@ class _CategoryContainerState extends State<CategoryContainer> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image(
-                image: category.thumb,
+                image: AssetImage(category.thumb),
               ),
               const Spacer(),
               Text(

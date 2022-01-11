@@ -9,6 +9,7 @@ import 'package:projeto_modulo_1/models/category_model.dart';
 import 'package:projeto_modulo_1/models/product_model.dart';
 import 'package:projeto_modulo_1/models/profile_model.dart';
 import 'package:projeto_modulo_1/nav_bar.dart';
+import 'package:projeto_modulo_1/repositories/category_repository.dart';
 import 'package:projeto_modulo_1/utils/convert.dart';
 import 'package:projeto_modulo_1/views/add_product_screen.dart';
 import 'package:projeto_modulo_1/views/notifications_screen.dart';
@@ -16,6 +17,7 @@ import 'package:projeto_modulo_1/views/widgets/product_ink_well.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/notifications_api.dart';
+import '../repositories/db_connection.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -25,14 +27,16 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late CategoryRepository repository = CategoryRepository();
   late SharedPreferences sharedPreferences;
   ProductListController list = ProductListController();
-  CategoryController catController = CategoryController();
+  late CategoryController catController;
   LocationData? locationData;
   List<StreamSubscription> subscriptions = [];
   Map<int, MemoryImage> thumbMap = {};
   ProfileController profileController =
       ProfileController(profile: Profile(notificationFrequency: 0));
+  bool loading = true;
 
   void _setNotificationFrequency() {
     try {
@@ -44,9 +48,56 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  // ANCHOR LOAD CONTENT
+  _loadContent() async {
+    List<Category> result = await repository.selectAll();
+    catController = CategoryController(categories: result);
+
+    setState(() {
+      loading = true;
+    });
+
+    list.getAllProducts().whenComplete(() {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
+  // ANCHOR REGISTER PRODUCT
+  _registerProduct(Product product) {
+    setState(() {
+      loading = true;
+    });
+    list.register(product).whenComplete(_loadContent);
+  }
+
+  // ANCHOR
+  _clearProductList() {
+    setState(() {
+      loading = true;
+    });
+    list.clear().whenComplete(() {
+      thumbMap.clear();
+      _loadContent();
+    });
+  }
+
+  // ANCHOR
+  _removeFromList(int productId, int index) {
+    setState(() {
+      loading = true;
+    });
+    list.removeItem(productId).whenComplete(() {
+      thumbMap.remove(index);
+      _loadContent();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    DbConnection().conn().whenComplete(_loadContent);
     SharedPreferences.getInstance()
         .then((value) => {sharedPreferences = value})
         .whenComplete(() => _setNotificationFrequency());
@@ -78,32 +129,12 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  void addToLit(Product product) {
-    setState(() {
-      list.addProduct(product);
-    });
-    profileController.updateProductList(list.getProducts());
-  }
-
-  void removeFromList(int index) {
-    setState(() {
-      list.removeProduct(index);
-      thumbMap.remove(index);
-    });
-  }
-
-  void clearList() {
-    setState(() {
-      list.clearList();
-      thumbMap.clear();
-    });
-  }
-
   void _navigator(context) async {
     Product? product = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const AddProduct(),
+          builder: (BuildContext context) =>
+              AddProduct(catController: catController),
           fullscreenDialog: true,
         ));
 
@@ -113,7 +144,7 @@ class _MainScreenState extends State<MainScreen> {
         product.longitude = locationData!.longitude;
       }
 
-      addToLit(product);
+      _registerProduct(product);
     }
   }
 
@@ -144,7 +175,7 @@ class _MainScreenState extends State<MainScreen> {
             onPressed: () {
               String callbackMessage = "Lista já esta vazia";
               if (list.getProducts().isNotEmpty) {
-                clearList();
+                _clearProductList();
                 callbackMessage = 'Lista limpa';
               }
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -160,42 +191,49 @@ class _MainScreenState extends State<MainScreen> {
           const SizedBox(height: 20),
           Flexible(
               flex: 6,
-              child: ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  Product currentProduct = list.getProduct(index);
+              child: loading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ListView.builder(
+                      itemBuilder: (BuildContext context, int index) {
+                        Product currentProduct = list.getProduct(index);
 
-                  MemoryImage? imageProvider;
-                  if (currentProduct.customThumbBase64 != null) {
-                    if (thumbMap.containsKey(index)) {
-                      imageProvider = thumbMap[index];
-                    } else {
-                      imageProvider = MemoryImage(Convert.decodeBase64Image(
-                          currentProduct.customThumbBase64!));
-                      thumbMap.addAll({index: imageProvider});
-                    }
-                  }
+                        MemoryImage? imageProvider;
+                        if (currentProduct.customThumbBase64 != null &&
+                            currentProduct.customThumbBase64 != 'unknown') {
+                          if (thumbMap.containsKey(index)) {
+                            imageProvider = thumbMap[index];
+                          } else {
+                            imageProvider = MemoryImage(
+                                Convert.decodeBase64Image(
+                                    currentProduct.customThumbBase64!));
+                            thumbMap.addAll({index: imageProvider});
+                          }
+                        }
 
-                  Category? cat =
-                      catController.getCategory(currentProduct.cat.id);
-                  var curLat = (currentProduct.latitude != null)
-                      ? currentProduct.latitude!.toStringAsFixed(4)
-                      : 'N/A';
-                  var curLong = (currentProduct.longitude != null)
-                      ? currentProduct.longitude!.toStringAsFixed(4)
-                      : 'N/A';
-                  var subText =
-                      'R\$ ${currentProduct.value.toStringAsFixed(2)}\n'
-                      'Lat: $curLat - Long: $curLong';
-                  return ProductInkWell(
-                      index: index,
-                      title: currentProduct.name,
-                      subTitle: subText,
-                      imageProvider: imageProvider,
-                      thumb: cat.thumb,
-                      handleRemove: removeFromList);
-                },
-                itemCount: list.getProducts().length,
-              )),
+                        Category? cat = catController
+                            .getCategory(currentProduct.categoryId);
+                        var curLat = (currentProduct.latitude != null)
+                            ? currentProduct.latitude!.toStringAsFixed(4)
+                            : 'N/A';
+                        var curLong = (currentProduct.longitude != null)
+                            ? currentProduct.longitude!.toStringAsFixed(4)
+                            : 'N/A';
+                        var subText =
+                            'R\$ ${currentProduct.value.toStringAsFixed(2)}\n'
+                            'Lat: $curLat - Long: $curLong';
+                        return ProductInkWell(
+                            index: index,
+                            productId: currentProduct.id,
+                            title: currentProduct.name,
+                            subTitle: subText,
+                            imageProvider: imageProvider,
+                            thumb: AssetImage(cat.thumb),
+                            handleRemove: _removeFromList);
+                      },
+                      itemCount: list.getProducts().length,
+                    )),
           Flexible(
               flex: 1,
               child: Center(

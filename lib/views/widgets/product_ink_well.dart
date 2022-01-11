@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ProductInkWell extends StatelessWidget {
   final int index;
+  final int productId;
   final String title;
   final String subTitle;
   final MemoryImage? imageProvider;
@@ -11,6 +12,7 @@ class ProductInkWell extends StatelessWidget {
   const ProductInkWell(
       {Key? key,
       required this.index,
+      required this.productId,
       required this.title,
       required this.subTitle,
       required this.imageProvider,
@@ -47,7 +49,7 @@ class ProductInkWell extends StatelessWidget {
         ),
         tooltip: 'Remove item',
         onPressed: () {
-          handleRemove(index);
+          handleRemove(productId, index);
         },
       ),
     ));

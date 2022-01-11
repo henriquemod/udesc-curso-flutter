@@ -10,8 +10,10 @@ import 'package:projeto_modulo_1/views/widgets/category_container.dart';
 import 'package:projeto_modulo_1/views/widgets/text_input.dart';
 import 'package:projeto_modulo_1/views/widgets/value_container.dart';
 
+// ignore: must_be_immutable
 class AddProduct extends StatefulWidget {
-  const AddProduct({Key? key}) : super(key: key);
+  CategoryController catController;
+  AddProduct({Key? key, required this.catController}) : super(key: key);
 
   @override
   _AddProductState createState() => _AddProductState();
@@ -19,7 +21,7 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   AddProductController controller = AddProductController();
-  CategoryController catController = CategoryController();
+  //CategoryController catController = CategoryController();
   ImagePicker imagePicker = ImagePicker();
   Uint8List? bytes;
   String? encoded;
@@ -58,7 +60,7 @@ class _AddProductState extends State<AddProduct> {
               ),
               const SizedBox(height: 10),
               CategoryContainer(
-                catController: catController,
+                catController: widget.catController,
               ),
               const SizedBox(height: 10),
               if (bytes != null)
@@ -91,10 +93,13 @@ class _AddProductState extends State<AddProduct> {
                   context,
                   Product(
                       name: controller.productNameController.text,
-                      cat: catController.getCategory(catController.selectedCat),
+                      categoryId: widget.catController
+                          .getCategory(widget.catController.selectedCat)
+                          .id,
                       value:
                           double.parse(controller.productValueController.text),
-                      customThumbBase64: encoded));
+                      customThumbBase64:
+                          (encoded != null) ? encoded : 'unknown'));
             }
           },
           icon: const Icon(Icons.playlist_add_check_rounded),
