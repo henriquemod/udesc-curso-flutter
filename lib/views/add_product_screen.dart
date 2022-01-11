@@ -94,8 +94,7 @@ class _AddProductState extends State<AddProduct> {
                   Product(
                       name: controller.productNameController.text,
                       categoryId: widget.catController
-                          .getCategory(widget.catController.selectedCat)
-                          .id,
+                          .categories[widget.catController.selectedCat].id,
                       value:
                           double.parse(controller.productValueController.text),
                       customThumbBase64:

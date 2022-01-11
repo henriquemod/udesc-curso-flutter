@@ -8,7 +8,7 @@ class CategoryController {
   int selectedCat = 0;
 
   void nextCat() {
-    selectedCat < categories.length - 1 ? selectedCat++ : selectedCat = 0;
+    selectedCat < categories.length ? selectedCat++ : selectedCat = 0;
   }
 
   void previousCat() {
@@ -17,6 +17,6 @@ class CategoryController {
   }
 
   Category getCategory(int index) {
-    return categories.elementAt(index);
+    return categories.firstWhere((category) => category.id == index);
   }
 }
