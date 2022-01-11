@@ -4,10 +4,25 @@ import 'package:projeto_modulo_1/repositories/product_repository.dart';
 class ProductListController {
   ProductRepository productRepository = ProductRepository();
   late List<Product> productList;
-  double listValue = 00.00;
+  late double listValue;
 
   ProductListController() {
     productList = <Product>[];
+    listValue = getTotalValue();
+  }
+
+  double getTotalValue() {
+    if (productList.isNotEmpty) {
+      Product sumProduct = productList.reduce((firstProd, secondProd) =>
+          Product(
+              name: 'SumProduct',
+              value: firstProd.value + secondProd.value,
+              categoryId: secondProd.categoryId,
+              customThumbBase64: 'unknown'));
+      return sumProduct.value;
+    } else {
+      return 00.00;
+    }
   }
 
   // ANCHOR
@@ -31,26 +46,12 @@ class ProductListController {
     await productRepository.delete(productId);
   }
 
+  /*
   List<Product> getProducts() {
     return productList;
   }
-
+  */
   Product getProduct(int index) {
     return productList.elementAt(index);
-  }
-
-  addProduct(Product product) {
-    productList.add(product);
-    listValue += product.value;
-  }
-
-  removeProduct(int index) {
-    listValue -= productList.elementAt(index).value;
-    productList.removeAt(index);
-  }
-
-  clearList() {
-    productList.clear();
-    listValue = 00.00;
   }
 }

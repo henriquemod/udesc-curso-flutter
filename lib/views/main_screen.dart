@@ -110,9 +110,14 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _listenLocationData(LocationData event) {
-    setState(() {
-      locationData = event;
-    });
+    if (locationData != null) {
+      if (locationData!.latitude != event.latitude ||
+          locationData!.longitude != event.longitude) {
+        setState(() {
+          locationData = event;
+        });
+      }
+    }
   }
 
   void _navigator(context) async {
@@ -159,7 +164,7 @@ class _MainScreenState extends State<MainScreen> {
             tooltip: 'Clear List',
             onPressed: () {
               String callbackMessage = "Lista já esta vazia";
-              if (list.getProducts().isNotEmpty) {
+              if (list.productList.isNotEmpty) {
                 _clearProductList();
                 callbackMessage = 'Lista limpa';
               }
@@ -182,7 +187,7 @@ class _MainScreenState extends State<MainScreen> {
                     )
                   : ListView.builder(
                       itemBuilder: (BuildContext context, int index) {
-                        Product currentProduct = list.getProduct(index);
+                        Product currentProduct = list.productList[index];
 
                         MemoryImage? imageProvider;
                         if (currentProduct.customThumbBase64 != null &&
@@ -197,7 +202,7 @@ class _MainScreenState extends State<MainScreen> {
                           }
                         }
 
-                        Category? cat = catController
+                        Category cat = catController
                             .getCategory(currentProduct.categoryId);
                         var curLat = (currentProduct.latitude != null)
                             ? currentProduct.latitude!.toStringAsFixed(4)
@@ -217,13 +222,13 @@ class _MainScreenState extends State<MainScreen> {
                             thumb: AssetImage(cat.thumb),
                             handleRemove: _removeFromList);
                       },
-                      itemCount: list.getProducts().length,
+                      itemCount: list.productList.length,
                     )),
           Flexible(
               flex: 1,
               child: Center(
                 child: Text(
-                  "Total: R\$${list.listValue.toStringAsFixed(2)}",
+                  "Total: R\$${list.getTotalValue().toStringAsFixed(2)}",
                   style: const TextStyle(
                     fontSize: 20,
                   ),
