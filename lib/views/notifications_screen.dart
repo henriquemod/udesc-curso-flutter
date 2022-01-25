@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:projeto_modulo_1/api/notifications_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../utils/notify.dart';
+
 // ignore: must_be_immutable
 class NotificationScreen extends StatefulWidget {
   SharedPreferences sharedPreferences;
@@ -23,10 +25,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         selectedIndex = (value != null) ? int.parse(value) : 0;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Falha ao carregar configurações"),
-        duration: Duration(seconds: 1),
-      ));
+      Notify.snack(
+          context: context, message: "Falha ao carregar configurações");
     }
   }
 

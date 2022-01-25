@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/notifications_api.dart';
 import '../repositories/db_connection.dart';
+import '../utils/notify.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -27,15 +28,14 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late CategoryRepository repository = CategoryRepository();
   late SharedPreferences sharedPreferences;
-  ProductListController list = ProductListController();
   late CategoryController catController;
+  late int notificationFrequency;
+  ProductListController list = ProductListController();
   LocationData? locationData;
   List<StreamSubscription> subscriptions = [];
   Map<int, MemoryImage> thumbMap = {};
   bool loading = true;
-  late int notificationFrequency;
 
-  // ANCHOR LOAD CONTENT
   _loadContent() async {
     List<Category> result = await repository.selectAll();
     catController = CategoryController(categories: result);
@@ -51,30 +51,30 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  // ANCHOR REGISTER PRODUCT
   _registerProduct(Product product) {
     setState(() {
       loading = true;
     });
+
     list.register(product).whenComplete(_loadContent);
   }
 
-  // ANCHOR
   _clearProductList() {
     setState(() {
       loading = true;
     });
+
     list.clear().whenComplete(() {
       thumbMap.clear();
       _loadContent();
     });
   }
 
-  // ANCHOR
   _removeFromList(int productId, int index) {
     setState(() {
       loading = true;
     });
+
     list.removeItem(productId).whenComplete(() {
       thumbMap.remove(index);
       _loadContent();
@@ -168,10 +168,7 @@ class _MainScreenState extends State<MainScreen> {
                 _clearProductList();
                 callbackMessage = 'Lista limpa';
               }
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(callbackMessage),
-                duration: const Duration(seconds: 1),
-              ));
+              Notify.snack(context: context, message: callbackMessage);
             },
           ),
         ],

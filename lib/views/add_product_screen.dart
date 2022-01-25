@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -6,9 +5,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:projeto_modulo_1/controllers/add_product_controller.dart';
 import 'package:projeto_modulo_1/controllers/categories_controller.dart';
 import 'package:projeto_modulo_1/models/product_model.dart';
+import 'package:projeto_modulo_1/utils/notify.dart';
 import 'package:projeto_modulo_1/views/widgets/category_container.dart';
 import 'package:projeto_modulo_1/views/widgets/text_input.dart';
 import 'package:projeto_modulo_1/views/widgets/value_container.dart';
+
+import '../utils/convert.dart';
 
 // ignore: must_be_immutable
 class AddProduct extends StatefulWidget {
@@ -21,22 +23,43 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   AddProductController controller = AddProductController();
-  //CategoryController catController = CategoryController();
   ImagePicker imagePicker = ImagePicker();
   Uint8List? bytes;
   String? encoded;
 
-  setImage(Uint8List bytess) {
+  void _setImage(Uint8List bytess) {
     setState(() {
       bytes = bytess;
     });
   }
 
-  Future<void> _encode(XFile image) async {
-    var bytes = await image.readAsBytes();
-    setImage(bytes);
-    String resultado = base64.encode(bytes);
-    encoded = resultado;
+  void _addImage() async {
+    try {
+      XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        var bytes = await image.readAsBytes();
+        _setImage(bytes);
+        encoded = await Convert.encodeXFile(image);
+      }
+    } catch (e) {
+      Notify.snack(context: context, message: 'Falha ao adicionar a imagem');
+    }
+  }
+
+  void _addProduct() async {
+    if (controller.productNameController.text.isEmpty) {
+      Notify.snack(
+          context: context, message: 'Nome do item precisa ser preenchido');
+    } else {
+      Navigator.pop(
+          context,
+          Product(
+              name: controller.productNameController.text,
+              categoryId: widget.catController
+                  .categories[widget.catController.selectedCat].id,
+              value: double.parse(controller.productValueController.text),
+              customThumbBase64: (encoded != null) ? encoded : 'unknown'));
+    }
   }
 
   @override
@@ -70,11 +93,7 @@ class _AddProductState extends State<AddProduct> {
                 ),
               const SizedBox(height: 40),
               ElevatedButton(
-                onPressed: () {
-                  imagePicker
-                      .pickImage(source: ImageSource.gallery)
-                      .then((value) => {if (value != null) _encode(value)});
-                },
+                onPressed: _addImage,
                 child: const Text('Adicionar foto do produto'),
               ),
             ],
@@ -82,25 +101,7 @@ class _AddProductState extends State<AddProduct> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            if (controller.productNameController.text.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Nome do item precisa ser preenchido"),
-                duration: Duration(seconds: 1),
-              ));
-            } else {
-              Navigator.pop(
-                  context,
-                  Product(
-                      name: controller.productNameController.text,
-                      categoryId: widget.catController
-                          .categories[widget.catController.selectedCat].id,
-                      value:
-                          double.parse(controller.productValueController.text),
-                      customThumbBase64:
-                          (encoded != null) ? encoded : 'unknown'));
-            }
-          },
+          onPressed: _addProduct,
           icon: const Icon(Icons.playlist_add_check_rounded),
           label: const Text('Adicionar')),
     );

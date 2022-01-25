@@ -87,6 +87,9 @@ flutter:
     - assets/thumbs/sementes.png
     - assets/thumbs/vegetais.png
     - assets/thumbs/verduras.png
+    - assets/nav_bg.png
+    - assets/nav_bg2.png
+    - assets/user.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
