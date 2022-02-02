@@ -26,15 +26,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  late CategoryRepository repository = CategoryRepository();
-  late SharedPreferences sharedPreferences;
-  late CategoryController catController;
-  late int notificationFrequency;
+  CategoryRepository repository = CategoryRepository();
   ProductListController list = ProductListController();
   LocationData? locationData;
   List<StreamSubscription> subscriptions = [];
   Map<int, MemoryImage> thumbMap = {};
   bool loading = true;
+  late SharedPreferences sharedPreferences;
+  late CategoryController catController;
 
   _loadContent() async {
     List<Category> result = await repository.selectAll();

@@ -38,7 +38,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    selectedIndex = selectedIndex;
     for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
       if (buttonIndex == selectedIndex) {
         isSelected[buttonIndex] = true;

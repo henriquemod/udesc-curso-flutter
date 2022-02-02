@@ -38,8 +38,8 @@ class _AddProductState extends State<AddProduct> {
       XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
       if (image != null) {
         var bytes = await image.readAsBytes();
-        _setImage(bytes);
         encoded = await Convert.encodeXFile(image);
+        _setImage(bytes);
       }
     } catch (e) {
       Notify.snack(context: context, message: 'Falha ao adicionar a imagem');
